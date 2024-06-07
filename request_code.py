@@ -4,7 +4,7 @@ import numpy as np
 import time
 
 # Define the API URL
-api_url = "https://your-flask-api.com/get_suggestion"
+api_url = "https://apicarlink.streamlit.app/"
 
 class Car:
     def __init__(self, location, fuel, speed, acceleration, braking, steering):
