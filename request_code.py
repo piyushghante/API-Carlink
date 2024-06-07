@@ -4,7 +4,7 @@ import numpy as np
 import time
 
 # Define the API URL
-api_url = "https://apicarlink.streamlit.app/"
+api_url = "https://your-flask-api.com/get_suggestion"
 
 class Car:
     def __init__(self, location, fuel, speed, acceleration, braking, steering):
@@ -55,20 +55,23 @@ while True:
         try:
             response = requests.post(api_url, json=data)
             if response.status_code == 200:
-                result = response.json()
-                suggested_action = result.get("suggested_action", "No suggestion available")
+                try:
+                    result = response.json()
+                    suggested_action = result.get("suggested_action", "No suggestion available")
 
-                # Update the placeholders with the new data
-                car_details_placeholders[idx].text(f"Car Details: {car.get_details()}")
-                suggested_action_placeholders[idx].text(f"Suggested Action: {suggested_action}")
+                    # Update the placeholders with the new data
+                    car_details_placeholders[idx].text(f"Car Details: {car.get_details()}")
+                    suggested_action_placeholders[idx].text(f"Suggested Action: {suggested_action}")
+                except ValueError:
+                    st.error("Failed to parse JSON response.")
             else:
                 st.error(f"Error {response.status_code}: {response.text}")
-        except requests.exceptions.ConnectionError:
-            st.error("Failed to connect to the API. Make sure the server is running.")
-            break  # Exit the loop if connection fails
+        except requests.exceptions.RequestException as e:
+            st.error(f"Failed to connect to the API: {e}")
 
     # Wait for a few seconds before sending the next request
     time.sleep(5)  # Adjust the sleep time as needed
+
 
 # import streamlit as st
 # import requests
