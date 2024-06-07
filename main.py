@@ -1,21 +1,18 @@
 # run_apps.py
 import subprocess
 import time
+import threading
 
-# Start the Flask API
-api_process = subprocess.Popen(["python", "API_code.py"])
+# Function to run the Flask API
+def run_flask():
+    subprocess.run(["python", "API_code.py"])
+
+# Start the Flask API in a separate thread
+flask_thread = threading.Thread(target=run_flask)
+flask_thread.start()
 
 # Give the Flask API some time to start
 time.sleep(5)
 
 # Start the Streamlit app
-streamlit_process = subprocess.Popen(["streamlit", "run", "request_code.py"])
-
-# Wait for both processes to complete (this will run indefinitely)
-try:
-    api_process.wait()
-    streamlit_process.wait()
-except KeyboardInterrupt:
-    # Handle cleanup if needed
-    api_process.terminate()
-    streamlit_process.terminate()
+subprocess.run(["streamlit", "run", "streamlit_app.py"])
